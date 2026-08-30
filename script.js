@@ -280,12 +280,6 @@ async function fetchAndRenderAllOrders() {
                 </div>
             `;
         }
-        html += `
-            <button onclick="clearTableOrders()" style="width: 100%; padding: 12px; background: #dc3545; color: white; border: none; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; font-size: 1rem;">
-                🧹 ลูกค้าเช็คบิล (ล้างออเดอร์โต๊ะนี้)
-            </button>
-        `;
-        
         container.innerHTML = html;
     } catch (err) {
         console.error("Fetch orders error:", err);
