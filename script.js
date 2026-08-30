@@ -1,3 +1,4 @@
+
 const urlParams = new URLSearchParams(window.location.search);
 const tableParam = urlParams.get('table');
 const typeParam = urlParams.get('type');
@@ -25,15 +26,22 @@ let currentStep = 'cart';
 let selectedPaymentMethod = 'promptpay';
 let statusCheckInterval = null;
 
+// ฟังก์ชันช่วยสร้างชื่อ Key ให้แยกตามโต๊ะ เช่น my_cafe_orders_โต๊ะ 1
+function getStorageKey() {
+    return `my_cafe_orders_${currentTable}`;
+}
+
 function getMyOrderIds() {
-    return JSON.parse(localStorage.getItem('my_cafe_orders') || '[]');
+    // เปลี่ยนมาดึงข้อมูลตาม Key ของโต๊ะนั้นๆ
+    return JSON.parse(localStorage.getItem(getStorageKey()) || '[]');
 }
 
 function saveMyOrderId(id) {
     const ids = getMyOrderIds();
     if (!ids.includes(id)) {
         ids.push(id);
-        localStorage.setItem('my_cafe_orders', JSON.stringify(ids));
+        // บันทึกข้อมูลแยกตาม Key ของโต๊ะ
+        localStorage.setItem(getStorageKey(), JSON.stringify(ids));
     }
     updateOrdersBadge();
 }
@@ -272,3 +280,4 @@ async function fetchAndRenderAllOrders() {
 
 fetchMenus();
 setInterval(fetchMenus, 5000);
+
