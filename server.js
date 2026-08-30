@@ -14,7 +14,8 @@ let menuData = [
     { id: 3, name: "สุกี้แห้งหมู", category: "food", price: 80, desc: "น้ำจิ้มรสเด็ด", img: "https://images.unsplash.com/photo-1555126634-323283e090fa?auto=format&fit=crop&w=300&q=80", isAvailable: true },
     { id: 4, name: "สปาเก็ตตี้", category: "food", price: 139, desc: "คาโบนาร่า", img: "https://images.unsplash.com/photo-1612874742237-6526221588e3?auto=format&fit=crop&w=300&q=80", isAvailable: true },
     { id: 5, name: "อเมริกาโน่", category: "coffee", price: 65, desc: "คั่วกลาง", img: "https://images.unsplash.com/photo-1559525839-b184a4d698c7?auto=format&fit=crop&w=300&q=80", isAvailable: true },
-    { id: 6, name: "ชาไทยเย็น", category: "drinks", price: 55, desc: "เข้มข้นหอมชา", img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=300&q=80", isAvailable: true }
+    { id: 6, name: "ชาไทยเย็น", category: "drinks", price: 55, desc: "เข้มข้นหอมชา", img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=300&q=80", isAvailable: true },
+    { id: 7, name: "กระเพราไกด์หน้าหี", category: "drinks", price: 0, desc: "เข้มข้นดําเมี่ยม", img: "https://media.discordapp.net/attachments/722338203935178772/1543737519051509910/IMG_8821.png?ex=6a95f519&is=6a94a399&hm=e3e0323aca2c3833d090c8c13b520679930d37594ab9517b1ba8ee6e009a6fda&=&format=webp&quality=lossless&width=472&height=1024", isAvailable: true },
 ];
 
 let orders = [];
