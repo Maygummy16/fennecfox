@@ -62,28 +62,10 @@
                     <span>ยอดรวมทั้งสิ้น</span>
                     <span id="modal-total-price" class="total-price-text">0 ฿</span>
                 </div>
-                <button class="action-btn" onclick="goToPaymentView()">เลือกวิธีชำระเงิน ➔</button>
+                <button class="action-btn" onclick="submitOrderToBackend()">ยืนยันการสั่งอาหาร ➔</button>
             </div>
 
-            <!-- Step 2: เลือกวิธีชำระเงิน -->
-            <div id="step-payment-view" style="display: none;">
-                <button class="close-modal" onclick="closeCartModal()" aria-label="ปิด">✕</button>
-                <h3 class="modal-title">💳 เลือกวิธีชำระเงิน</h3>
-                <p class="payment-subtitle">ยอดชำระทั้งหมด <span id="payment-amount" class="highlight-text">0 ฿</span></p>
-                
-                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                    <button class="action-btn" style="flex: 1; background: #28a745;" onclick="selectPaymentMethod('promptpay')">📲 สแกน QR</button>
-                    <button class="action-btn" style="flex: 1; background: #6c757d;" onclick="selectPaymentMethod('cashier')">💵 เงินสด</button>
-                </div>
 
-                <div id="qr-code-box" class="qr-box" style="display: none;">
-                    <div class="promptpay-header">Prompt Pay</div>
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=FennecFoxCafe" alt="QR Code" class="qr-img">
-                    <p class="qr-notice">สแกนจ่ายแล้วกดปุ่มยืนยันด้านล่าง</p>
-                </div>
-
-                <button class="action-btn" style="margin-top: 10px;" onclick="submitOrderToBackend()">ยืนยันการสั่งอาหาร ➔</button>
-            </div>
 
             <!-- Step 3: สถานะออเดอร์ -->
             <div id="step-status-view" style="display: none;">

@@ -142,7 +142,6 @@ function closeCartModal() {
 function switchStep(step) {
     currentStep = step;
     document.getElementById('step-cart-view').style.display = step === 'cart' ? 'block' : 'none';
-    document.getElementById('step-payment-view').style.display = step === 'payment' ? 'block' : 'none';
     document.getElementById('step-status-view').style.display = step === 'status' ? 'block' : 'none';
 }
 
@@ -183,18 +182,6 @@ function changeModalQty(id, change) {
     else renderCartModalItems();
 }
 
-function goToPaymentView() {
-    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    document.getElementById('payment-amount').innerText = `${totalPrice} ฿`;
-    switchStep('payment');
-    selectPaymentMethod('promptpay');
-}
-
-function selectPaymentMethod(method) {
-    selectedPaymentMethod = method;
-    document.getElementById('qr-code-box').style.display = method === 'promptpay' ? 'block' : 'none';
-}
-
 async function submitOrderToBackend() {
     const diningOption = document.querySelector('input[name="dining-option"]:checked').value;
     const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -202,7 +189,7 @@ async function submitOrderToBackend() {
     const orderPayload = {
         table: currentTable,
         diningOption: diningOption,
-        paymentMethod: selectedPaymentMethod,
+        paymentMethod: "ชำระภายหลัง", // หรือใส่เป็นอย่างอื่นตามต้องการ
         items: cart,
         totalPrice: totalPrice
     };
@@ -216,8 +203,7 @@ async function submitOrderToBackend() {
         const data = await res.json();
 
         if (data.success) {
-            saveMyOrderId(data.order.id);
-            cart = []; 
+            cart = [];
             updateCart();
             switchStep('status');
             startPollingAllOrders();
