@@ -78,4 +78,13 @@ app.put('/api/orders/:id/status', (req, res) => {
 
 // ใช้ process.env.PORT สำหรับขึ้น Render.com
 const PORT = process.env.PORT || 3000;
+
+// API สำหรับเคลียร์ประวัติออเดอร์ของโต๊ะนั้นๆ เมื่อลูกค้าเช็คบิล
+app.delete('/api/orders/clear/:table', (req, res) => {
+    const tableName = req.params.table;
+    // กรองเอาเฉพาะออเดอร์ที่ "ไม่ใช่" ของโต๊ะนี้เก็บไว้ (เท่ากับลบของโต๊ะนี้ทิ้ง)
+    orders = orders.filter(o => o.table !== tableName);
+    res.json({ success: true, message: `ล้างโต๊ะ ${tableName} เรียบร้อย` });
+});
+
 app.listen(PORT, () => console.log(`🚀 เซิร์ฟเวอร์ทำงานที่พอร์ต ${PORT}`));

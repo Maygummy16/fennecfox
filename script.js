@@ -280,6 +280,12 @@ async function fetchAndRenderAllOrders() {
                 </div>
             `;
         }
+        html += `
+            <button onclick="clearTableOrders()" style="width: 100%; padding: 12px; background: #dc3545; color: white; border: none; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer; font-size: 1rem;">
+                🧹 ลูกค้าเช็คบิล (ล้างออเดอร์โต๊ะนี้)
+            </button>
+        `;
+        
         container.innerHTML = html;
     } catch (err) {
         console.error("Fetch orders error:", err);
@@ -312,3 +318,18 @@ function openMyOrdersModal() {
 fetchMenus();
 setInterval(fetchMenus, 5000);
 
+async function clearTableOrders() {
+    if (!confirm(`ต้องการล้างประวัติออเดอร์ของ ${currentTable} เพื่อรับลูกค้าใหม่ใช่ไหม?`)) return;
+    
+    try {
+        const res = await fetch(`/api/orders/clear/${encodeURIComponent(currentTable)}`, { method: 'DELETE' });
+        if (res.ok) {
+            alert("เคลียร์โต๊ะเรียบร้อย เตรียมรับลูกค้าใหม่ได้เลย ✨");
+            fetchAndRenderAllOrders(); 
+            updateOrdersBadge(); 
+            closeCartModal();
+        }
+    } catch (err) {
+        alert("เกิดข้อผิดพลาดในการล้างโต๊ะ");
+    }
+}
