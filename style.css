@@ -465,3 +465,113 @@ body {
 }
 .in-stock { background: #28a745; color: white; }
 .out-stock { background: #dc3545; color: white; }
+
+/* ปุ่มลอย ดูออเดอร์ของฉัน */
+.my-orders-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-family: 'Prompt', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 10;
+}
+
+.orders-badge {
+    background: #dc2626;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* การ์ดสถานะออเดอร์ย่อย */
+.multi-order-card {
+    background: #ffffff;
+    border: 1px solid #f3f4f6;
+    border-radius: 16px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.multi-order-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #111827;
+    margin-bottom: 8px;
+}
+
+.multi-order-header span {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.multi-order-items {
+    font-size: 13px;
+    color: #4b5563;
+    background: #f9fafb;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.close-modal {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  font-weight: bold;
+  color: #888;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.close-modal:hover {
+  color: #333;
+}
+
+/* จัดตำแหน่งให้ Container อ้างอิงได้ถูกต้อง */
+.modal-content,
+#step-cart-view,
+#step-payment-view,
+#step-status-view {
+  position: relative;
+}
+
+/* ปุ่มกากบาทวงกลม */
+.close-modal {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  border: none;
+  font-size: 16px;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.close-modal:hover {
+  background-color: #e0e0e0;
+  color: #333;
+}

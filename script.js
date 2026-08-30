@@ -1,4 +1,3 @@
-// ดึงค่า Param จาก URL
 const urlParams = new URLSearchParams(window.location.search);
 const tableParam = urlParams.get('table');
 const typeParam = urlParams.get('type');
@@ -17,23 +16,45 @@ if (typeParam === 'takeaway' || tableParam === 'takeaway') {
 document.addEventListener("DOMContentLoaded", () => {
     const optionRadio = document.querySelector(`input[name="dining-option"][value="${defaultOption}"]`);
     if (optionRadio) optionRadio.checked = true;
+    updateOrdersBadge();
 });
 
 let menuData = [];
 let cart = [];
 let currentStep = 'cart';
-let currentOrderId = null;
-let statusCheckInterval = null;
 let selectedPaymentMethod = 'promptpay';
+let statusCheckInterval = null;
+
+function getMyOrderIds() {
+    return JSON.parse(localStorage.getItem('my_cafe_orders') || '[]');
+}
+
+function saveMyOrderId(id) {
+    const ids = getMyOrderIds();
+    if (!ids.includes(id)) {
+        ids.push(id);
+        localStorage.setItem('my_cafe_orders', JSON.stringify(ids));
+    }
+    updateOrdersBadge();
+}
+
+function updateOrdersBadge() {
+    const ids = getMyOrderIds();
+    const badge = document.getElementById('orders-badge');
+    if (ids.length > 0) {
+        badge.innerText = ids.length;
+        badge.style.display = 'inline-block';
+    } else {
+        badge.style.display = 'none';
+    }
+}
 
 async function fetchMenus() {
     try {
         const response = await fetch('/api/menus');
         menuData = await response.json();
         renderMenu(menuData);
-    } catch (error) {
-        console.error("ไม่สามารถโหลดเมนูได้:", error);
-    }
+    } catch (error) {}
 }
 
 function renderMenu(items) {
@@ -46,7 +67,7 @@ function renderMenu(items) {
         
         const actionButton = item.isAvailable 
             ? `<button class="add-btn" onclick="addToCart(${item.id})">+</button>`
-            : `<span style="color: red; font-size: 0.8rem; font-weight: bold;">สินค้าหมด</span>`;
+            : `<span style="color: red; font-size: 0.8rem; font-weight: bold;">หมด</span>`;
 
         card.innerHTML = `
             <img src="${item.img}" alt="${item.name}" style="${!item.isAvailable ? 'filter: grayscale(1); opacity: 0.6;' : ''}">
@@ -92,21 +113,22 @@ function filterMenu(category) {
 }
 
 function openCartModal() {
-    if (cart.length === 0) {
-        alert("กรุณาเลือกรายการอาหารก่อนเปิดตะกร้าค่ะ 🦊");
-        return;
-    }
+    if (cart.length === 0) return alert("ตะกร้าว่างเปล่าค่ะ 🦊");
     document.getElementById('checkout-modal').classList.add('active');
     switchStep('cart');
     renderCartModalItems();
 }
 
+function openMyOrdersModal() {
+    if (getMyOrderIds().length === 0) return alert("ยังไม่มีรายการออเดอร์ค่ะ");
+    document.getElementById('checkout-modal').classList.add('active');
+    switchStep('status');
+    startPollingAllOrders();
+}
+
 function closeCartModal() {
-    if (currentStep === 'status' && document.getElementById('finish-order-btn').style.display === 'none') {
-        alert("กำลังทำอาหารอยู่ กรุณารอสักครู่นะคะ!");
-        return;
-    }
     document.getElementById('checkout-modal').classList.remove('active');
+    if (statusCheckInterval) clearInterval(statusCheckInterval);
 }
 
 function switchStep(step) {
@@ -114,13 +136,6 @@ function switchStep(step) {
     document.getElementById('step-cart-view').style.display = step === 'cart' ? 'block' : 'none';
     document.getElementById('step-payment-view').style.display = step === 'payment' ? 'block' : 'none';
     document.getElementById('step-status-view').style.display = step === 'status' ? 'block' : 'none';
-    
-    const closeBtn = document.querySelector('.close-modal');
-    if (step === 'payment' || (step === 'status' && document.getElementById('finish-order-btn').style.display === 'none')) {
-        closeBtn.style.display = 'none';
-    } else {
-        closeBtn.style.display = 'flex';
-    }
 }
 
 function renderCartModalItems() {
@@ -169,8 +184,7 @@ function goToPaymentView() {
 
 function selectPaymentMethod(method) {
     selectedPaymentMethod = method;
-    const qrBox = document.getElementById('qr-code-box');
-    qrBox.style.display = method === 'promptpay' ? 'block' : 'none';
+    document.getElementById('qr-code-box').style.display = method === 'promptpay' ? 'block' : 'none';
 }
 
 async function submitOrderToBackend() {
@@ -194,77 +208,67 @@ async function submitOrderToBackend() {
         const data = await res.json();
 
         if (data.success) {
-            currentOrderId = data.order.id;
+            saveMyOrderId(data.order.id);
+            cart = []; 
+            updateCart();
             switchStep('status');
-            startPollingOrderStatus();
+            startPollingAllOrders();
         }
     } catch (err) {
-        alert("เกิดข้อผิดพลาดในการส่งออเดอร์ กรุณาลองใหม่อีกครั้ง");
+        alert("เกิดข้อผิดพลาด กรุณาลองใหม่");
     }
 }
 
-function startPollingOrderStatus() {
-    updateStatusUI('pending');
+function startPollingAllOrders() {
+    fetchAndRenderAllOrders();
+    if (statusCheckInterval) clearInterval(statusCheckInterval);
+    statusCheckInterval = setInterval(fetchAndRenderAllOrders, 3000);
+}
+
+async function fetchAndRenderAllOrders() {
+    const ids = getMyOrderIds();
+    const container = document.getElementById('my-orders-list-container');
     
-    statusCheckInterval = setInterval(async () => {
-        if (!currentOrderId) return;
+    if (ids.length === 0) return;
+
+    let html = '';
+    for (let i = ids.length - 1; i >= 0; i--) {
         try {
-            const res = await fetch(`/api/orders/${currentOrderId}`);
+            const res = await fetch(`/api/orders/${ids[i]}`);
+            if (!res.ok) continue;
             const order = await res.json();
-            updateStatusUI(order.status);
 
-            if (order.status === 'completed') {
-                clearInterval(statusCheckInterval);
+            let statusText = "📩 กำลังส่งรายการเข้าครัว...";
+            let s1 = "active", s2 = "", s3 = "", l1 = "", l2 = "";
+
+            if (order.status === 'cooking') {
+                statusText = "🍳 เชฟกำลังปรุงเมนู...";
+                s2 = "active"; l1 = "active";
+            } else if (order.status === 'completed') {
+                statusText = "✨ อาหารเสร็จเรียบร้อยแล้ว!";
+                s2 = "active"; s3 = "active"; l1 = "active"; l2 = "active";
             }
-        } catch (err) {
-            console.error("เช็คสถานะล้มเหลว:", err);
-        }
-    }, 2000);
-}
 
-function updateStatusUI(status) {
-    const s1 = document.getElementById('status-1');
-    const s2 = document.getElementById('status-2');
-    const s3 = document.getElementById('status-3');
-    const l1 = document.getElementById('line-1');
-    const l2 = document.getElementById('line-2');
-    const desc = document.getElementById('status-description');
-    const finishBtn = document.getElementById('finish-order-btn');
+            const itemsStr = order.items.map(item => `${item.name} x${item.quantity}`).join(', ');
 
-    if (status === 'pending') {
-        s1.className = "status-step active";
-        s2.className = "status-step";
-        s3.className = "status-step";
-        l1.className = "status-line";
-        l2.className = "status-line";
-        desc.innerText = "📩 ส่งรายการอาหารเข้าครัวเรียบร้อยแล้ว กรอยืนยันสักครู่...";
-        finishBtn.style.display = 'none';
-    } else if (status === 'cooking') {
-        s1.className = "status-step active";
-        s2.className = "status-step active";
-        s3.className = "status-step";
-        l1.className = "status-line active";
-        l2.className = "status-line";
-        desc.innerText = "🍳 เชฟกำลังปรุงเมนูของคุณอยู่ในครัว...";
-        finishBtn.style.display = 'none';
-    } else if (status === 'completed') {
-        s1.className = "status-step active";
-        s2.className = "status-step active";
-        s3.className = "status-step active";
-        l1.className = "status-line active";
-        l2.className = "status-line active";
-        desc.innerText = "✨ อาหารของคุณเสร็จเรียบร้อยแล้ว เชิญรับประทานได้เลยค่ะ! 🦊☕";
-        finishBtn.style.display = 'block';
-        document.querySelector('.close-modal').style.display = 'flex';
+            html += `
+                <div class="multi-order-card">
+                    <div class="multi-order-header"><b>ออเดอร์ #${order.id}</b> <span>${order.time}</span></div>
+                    <p class="multi-order-items">${itemsStr}</p>
+                    <div class="status-stepper" style="margin: 15px 0;">
+                        <div class="status-step ${s1}"><div class="step-icon">🛒</div></div>
+                        <div class="status-line ${l1}"></div>
+                        <div class="status-step ${s2}"><div class="step-icon">🔥</div></div>
+                        <div class="status-line ${l2}"></div>
+                        <div class="status-step ${s3}"><div class="step-icon">✅</div></div>
+                    </div>
+                    <div class="status-box" style="margin-bottom: 0; padding: 10px;"><p id="status-description">${statusText}</p></div>
+                </div>
+            `;
+        } catch (err) {}
     }
-}
-
-function resetCartAndClose() {
-    cart = [];
-    updateCart();
-    closeCartModal();
+    container.innerHTML = html;
 }
 
 fetchMenus();
-// รีเฟรชเช็คเมนูโดนปิด/เปิด ทุก 5 วินาที
 setInterval(fetchMenus, 5000);

@@ -17,6 +17,11 @@
         <p>Fresh Coffee • Homemade Bakery</p>
     </header>
 
+    <!-- ปุ่มลอยดูออเดอร์ของฉัน -->
+    <button class="my-orders-btn" onclick="openMyOrdersModal()">
+        📋 ออเดอร์ของฉัน <span id="orders-badge" class="orders-badge" style="display:none;">0</span>
+    </button>
+
     <nav class="categories">
         <button class="cat-btn active" onclick="filterMenu('all')">ทั้งหมด</button>
         <button class="cat-btn" onclick="filterMenu('food')">🍛 อาหาร</button>
@@ -39,16 +44,15 @@
 
     <div id="checkout-modal" class="modal-overlay">
         <div class="modal-content">
-            <button class="close-modal" onclick="closeCartModal()">✕</button>
             
-            <!-- ขั้นตอนที่ 1: ตรวจสอบรายการอาหาร & เลือกรูปแบบการทาน -->
+            <!-- Step 1: ตะกร้าสินค้า -->
             <div id="step-cart-view">
+                <button class="close-modal" onclick="closeCartModal()" aria-label="ปิด">✕</button>
                 <h3 class="modal-title">🛒 ตะกร้าสินค้าของคุณ</h3>
                 
-                <!-- ตัวเลือก กินที่ร้าน / สั่งกลับบ้าน -->
                 <div style="margin-bottom: 15px; background: #f5f5f5; padding: 10px; border-radius: 8px;">
                     <label style="font-weight: 500; display: block; margin-bottom: 5px;">รูปแบบการรับประทาน:</label>
-                    <label><input type="radio" name="dining-option" value="eat-in" checked> 🍽️ กินที่ร้าน (โต๊ะ 1)</label> &nbsp;
+                    <label><input type="radio" name="dining-option" value="eat-in" checked> 🍽️ กินที่ร้าน</label> &nbsp;
                     <label><input type="radio" name="dining-option" value="takeaway"> 🛍️ สั่งกลับบ้าน</label>
                 </div>
 
@@ -61,17 +65,17 @@
                 <button class="action-btn" onclick="goToPaymentView()">เลือกวิธีชำระเงิน ➔</button>
             </div>
 
-            <!-- ขั้นตอนที่ 2: เลือกวิธีชำระเงิน -->
+            <!-- Step 2: เลือกวิธีชำระเงิน -->
             <div id="step-payment-view" style="display: none;">
+                <button class="close-modal" onclick="closeCartModal()" aria-label="ปิด">✕</button>
                 <h3 class="modal-title">💳 เลือกวิธีชำระเงิน</h3>
                 <p class="payment-subtitle">ยอดชำระทั้งหมด <span id="payment-amount" class="highlight-text">0 ฿</span></p>
                 
                 <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                    <button class="action-btn" style="flex: 1; background: #28a745;" onclick="selectPaymentMethod('promptpay')">📲 สแกน QR PromptPay</button>
-                    <button class="action-btn" style="flex: 1; background: #6c757d;" onclick="selectPaymentMethod('cashier')">💵 จ่ายที่เคาน์เตอร์</button>
+                    <button class="action-btn" style="flex: 1; background: #28a745;" onclick="selectPaymentMethod('promptpay')">📲 สแกน QR</button>
+                    <button class="action-btn" style="flex: 1; background: #6c757d;" onclick="selectPaymentMethod('cashier')">💵 เงินสด</button>
                 </div>
 
-                <!-- กล่อง QR Code จะแสดงเมื่อเลือก PromptPay -->
                 <div id="qr-code-box" class="qr-box" style="display: none;">
                     <div class="promptpay-header">Prompt Pay</div>
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=FennecFoxCafe" alt="QR Code" class="qr-img">
@@ -81,32 +85,15 @@
                 <button class="action-btn" style="margin-top: 10px;" onclick="submitOrderToBackend()">ยืนยันการสั่งอาหาร ➔</button>
             </div>
 
-            <!-- ขั้นตอนที่ 3: ติดตามสถานะออเดอร์ Real-time -->
+            <!-- Step 3: สถานะออเดอร์ -->
             <div id="step-status-view" style="display: none;">
+                <button class="close-modal" onclick="closeCartModal()" aria-label="ปิด">✕</button>
                 <h3 class="modal-title">👨‍🍳 สถานะออเดอร์ของคุณ</h3>
                 
-                <div class="status-stepper">
-                    <div class="status-step" id="status-1">
-                        <div class="step-icon">🛒</div>
-                        <p>สั่งอาหาร</p>
-                    </div>
-                    <div class="status-line" id="line-1"></div>
-                    <div class="status-step" id="status-2">
-                        <div class="step-icon">🔥</div>
-                        <p>กำลังทำ</p>
-                    </div>
-                    <div class="status-line" id="line-2"></div>
-                    <div class="status-step" id="status-3">
-                        <div class="step-icon">✅</div>
-                        <p>เสร็จสิ้น</p>
-                    </div>
-                </div>
+                <!-- คอนเทนเนอร์แสดงหลายออเดอร์ -->
+                <div id="my-orders-list-container" style="max-height: 400px; overflow-y: auto; padding-right: 5px;"></div>
 
-                <div class="status-box">
-                    <p id="status-description">กำลังส่งรายการอาหารไปที่ห้องครัว...</p>
-                </div>
-
-                <button id="finish-order-btn" class="action-btn secondary-btn" style="display: none;" onclick="resetCartAndClose()">กลับสู่หน้าหลัก</button>
+                <button class="action-btn secondary-btn" style="margin-top: 20px;" onclick="closeCartModal()">➕ สั่งอาหารเพิ่ม</button>
             </div>
 
         </div>
