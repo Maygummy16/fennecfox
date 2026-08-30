@@ -49,7 +49,16 @@ app.post('/api/orders', (req, res) => {
     res.json({ success: true, order: newOrder });
 });
 
-app.get('/api/orders', (req, res) => res.json(orders));
+app.get('/api/orders', (req, res) => {
+    // ถ้ามีการส่งชื่อโต๊ะมา ให้กรองส่งกลับไปเฉพาะออเดอร์ของโต๊ะนั้น
+    const tableQuery = req.query.table;
+    if (tableQuery) {
+        const tableOrders = orders.filter(o => o.table === tableQuery);
+        return res.json(tableOrders);
+    }
+    // ถ้าไม่มี ให้ส่งออเดอร์ทั้งหมด
+    res.json(orders);
+});
 
 app.get('/api/orders/:id', (req, res) => {
     const order = orders.find(o => o.id === parseInt(req.params.id));

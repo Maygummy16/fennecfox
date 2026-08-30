@@ -234,17 +234,23 @@ function startPollingAllOrders() {
 }
 
 async function fetchAndRenderAllOrders() {
-    const ids = getMyOrderIds();
     const container = document.getElementById('my-orders-list-container');
     
-    if (ids.length === 0) return;
+    try {
+        // ดึงออเดอร์ทั้งหมดของโต๊ะปัจจุบันจากเซิร์ฟเวอร์
+        const res = await fetch(`/api/orders?table=${encodeURIComponent(currentTable)}`);
+        if (!res.ok) return;
+        const tableOrders = await res.json();
 
-    let html = '';
-    for (let i = ids.length - 1; i >= 0; i--) {
-        try {
-            const res = await fetch(`/api/orders/${ids[i]}`);
-            if (!res.ok) continue;
-            const order = await res.json();
+        if (tableOrders.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding: 20px;">ยังไม่มีออเดอร์สำหรับโต๊ะนี้</p>';
+            return;
+        }
+
+        let html = '';
+        // วนลูปจากหลังมาหน้า เพื่อให้ออเดอร์ล่าสุดอยู่บนสุด
+        for (let i = tableOrders.length - 1; i >= 0; i--) {
+            const order = tableOrders[i];
 
             let statusText = "📩 กำลังส่งรายการเข้าครัว...";
             let s1 = "active", s2 = "", s3 = "", l1 = "", l2 = "";
@@ -273,9 +279,34 @@ async function fetchAndRenderAllOrders() {
                     <div class="status-box" style="margin-bottom: 0; padding: 10px;"><p id="status-description">${statusText}</p></div>
                 </div>
             `;
-        } catch (err) {}
+        }
+        container.innerHTML = html;
+    } catch (err) {
+        console.error("Fetch orders error:", err);
     }
-    container.innerHTML = html;
+}
+
+// อัปเดตตัวเลขแจ้งเตือนบนปุ่ม "ออเดอร์ของโต๊ะ"
+async function updateOrdersBadge() {
+    try {
+        const res = await fetch(`/api/orders?table=${encodeURIComponent(currentTable)}`);
+        const tableOrders = await res.json();
+        const badge = document.getElementById('orders-badge');
+        
+        if (tableOrders.length > 0) {
+            badge.innerText = tableOrders.length;
+            badge.style.display = 'inline-block';
+        } else {
+            badge.style.display = 'none';
+        }
+    } catch (err) {}
+}
+
+// ปรับให้ปุ่มเปิด Modal ไม่ต้องเช็ค localStorage แล้ว
+function openMyOrdersModal() {
+    document.getElementById('checkout-modal').classList.add('active');
+    switchStep('status');
+    startPollingAllOrders();
 }
 
 fetchMenus();
