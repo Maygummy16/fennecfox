@@ -1,3 +1,4 @@
+process.env.TZ = "Asia/Bangkok"; // ตั้งค่าเวลาเซิร์ฟเวอร์ให้เป็นเวลาประเทศไทย (GMT+7)
 const express = require('express');
 const cors = require('cors');
 
