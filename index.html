@@ -2,111 +2,118 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fennec Fox Cafe - สั่งอาหาร</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Fennec Fox Cafe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Header & Dining Options -->
+<div class="app-container">
+    
     <header class="header">
-        <div class="logo">🦊 Fennec Fox Cafe</div>
-        <p class="subtitle">Fresh Coffee • Homemade Bakery</p>
-        
-        <!-- Dining Option Radio Buttons -->
-        <div class="dining-selector">
-            <label class="dining-option">
-                <input type="radio" name="dining-option" value="eat-in" checked>
-                <span>🍽️ ทานที่ร้าน</span>
-            </label>
-            <label class="dining-option">
-                <input type="radio" name="dining-option" value="takeaway">
-                <span>🛍️ สั่งกลับบ้าน</span>
-            </label>
-        </div>
+        <h1>🦊</h1>
+        <h2>Fennec Fox Cafe</h2>
+        <p>Fresh Coffee • Homemade Bakery</p>
     </header>
 
-    <!-- ปุ่มลอยดูออเดอร์ของฉัน -->
-    <button class="my-orders-btn" onclick="openMyOrdersModal()">
-        📋 ออเดอร์ของฉัน <span id="orders-badge" class="orders-badge" style="display:none;">0</span>
-    </button>
-
-    <!-- Category Filter -->
-    <div class="categories">
+    <nav class="categories">
         <button class="cat-btn active" onclick="filterMenu('all')">ทั้งหมด</button>
-        <button class="cat-btn" onclick="filterMenu('food')">🍲 อาหาร</button>
+        <button class="cat-btn" onclick="filterMenu('food')">🍛 อาหาร</button>
         <button class="cat-btn" onclick="filterMenu('coffee')">☕ กาแฟ</button>
-        <button class="cat-btn" onclick="filterMenu('drinks')">🍹 เครื่องดื่ม</button>
-    </div>
+        <button class="cat-btn" onclick="filterMenu('drinks')">🥤 เครื่องดื่ม</button>
+    </nav>
 
-    <!-- Food Menu Grid -->
-    <main class="menu-container" id="menu-container"></main>
+    <main class="menu-grid" id="menu-container"></main>
 
-    <!-- Floating Cart Bar -->
     <div class="cart-bar" onclick="openCartModal()">
         <div class="cart-info">
             <span class="cart-icon">🛒</span>
             <span id="cart-count">0 รายการ</span>
         </div>
-        <div class="cart-total" id="cart-total">0 ฿</div>
-    </div>
-
-    <!-- Modal หลัก (รองรับ ตะกร้า / ชำระเงิน / สถานะออเดอร์) -->
-    <div class="modal" id="checkout-modal">
-        <div class="modal-content">
-            <!-- ปุ่มปิด ✕ (กดปิดได้ตลอดเวลา) -->
-            <button class="close-modal" onclick="closeCartModal()">✕</button>
-
-            <!-- 1. หน้าตะกร้าสินค้า -->
-            <div id="step-cart-view">
-                <h2>🛒 รายการอาหารในตะกร้า</h2>
-                <div id="cart-items-list"></div>
-                <div class="modal-footer">
-                    <div class="total-row">
-                        <span>ราคารวมทั้งหมด:</span>
-                        <b id="modal-total-price">0 ฿</b>
-                    </div>
-                    <button class="checkout-btn" onclick="goToPaymentView()">ดำเนินการชำระเงิน 👉</button>
-                </div>
-            </div>
-
-            <!-- 2. หน้าชำระเงิน -->
-            <div id="step-payment-view" style="display: none;">
-                <button class="back-btn" onclick="switchStep('cart')">👈 ย้อนกลับ</button>
-                <h2>💳 เลือกช่องทางการชำระเงิน</h2>
-                <p>ยอดชำระทั้งสิ้น: <b id="payment-amount" style="color:#d35400;">0 ฿</b></p>
-                
-                <div class="payment-methods">
-                    <label class="pay-card">
-                        <input type="radio" name="pay-method" value="promptpay" checked onclick="selectPaymentMethod('promptpay')">
-                        <span>📱 สแกน QR PromptPay</span>
-                    </label>
-                    <label class="pay-card">
-                        <input type="radio" name="pay-method" value="cash" onclick="selectPaymentMethod('cash')">
-                        <span>💵 ชำระเงินสดที่เคาน์เตอร์</span>
-                    </label>
-                </div>
-
-                <div id="qr-code-box" style="text-align: center; margin: 15px 0;">
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=PROMPTPAY_MOCK" alt="QR Code Promptpay" style="border: 2px solid #ddd; border-radius: 8px;">
-                    <p style="font-size: 0.85rem; color: #7f8c8d; margin-top: 5px;">สแกนแล้วกดส่งรายการได้เลยค่ะ</p>
-                </div>
-
-                <button class="checkout-btn" onclick="submitOrderToBackend()">✅ ยืนยันการสั่งซื้อ</button>
-            </div>
-
-            <!-- 3. หน้าสถานะออเดอร์ทั้งหมด -->
-            <div id="step-status-view" style="display: none;">
-                <h2>🧑‍🍳 สถานะออเดอร์ของคุณ</h2>
-                <div id="my-orders-list-container">
-                    <!-- รายการออเดอร์จะมาแสดงตรงนี้ -->
-                </div>
-                <button class="order-more-btn" onclick="closeCartModal()">➕ สั่งอาหารเพิ่ม</button>
-            </div>
+        <div class="cart-price">
+            <span id="cart-total">0 ฿</span>
+            <span class="checkout-arrow">➔</span>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <div id="checkout-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeCartModal()">✕</button>
+            
+            <!-- ขั้นตอนที่ 1: ตรวจสอบรายการอาหาร & เลือกรูปแบบการทาน -->
+            <div id="step-cart-view">
+                <h3 class="modal-title">🛒 ตะกร้าสินค้าของคุณ</h3>
+                
+                <!-- ตัวเลือก กินที่ร้าน / สั่งกลับบ้าน -->
+                <div style="margin-bottom: 15px; background: #f5f5f5; padding: 10px; border-radius: 8px;">
+                    <label style="font-weight: 500; display: block; margin-bottom: 5px;">รูปแบบการรับประทาน:</label>
+                    <label><input type="radio" name="dining-option" value="eat-in" checked> 🍽️ กินที่ร้าน (โต๊ะ 1)</label> &nbsp;
+                    <label><input type="radio" name="dining-option" value="takeaway"> 🛍️ สั่งกลับบ้าน</label>
+                </div>
+
+                <div id="cart-items-list" class="cart-items-list"></div>
+                
+                <div class="modal-total-row">
+                    <span>ยอดรวมทั้งสิ้น</span>
+                    <span id="modal-total-price" class="total-price-text">0 ฿</span>
+                </div>
+                <button class="action-btn" onclick="goToPaymentView()">เลือกวิธีชำระเงิน ➔</button>
+            </div>
+
+            <!-- ขั้นตอนที่ 2: เลือกวิธีชำระเงิน -->
+            <div id="step-payment-view" style="display: none;">
+                <h3 class="modal-title">💳 เลือกวิธีชำระเงิน</h3>
+                <p class="payment-subtitle">ยอดชำระทั้งหมด <span id="payment-amount" class="highlight-text">0 ฿</span></p>
+                
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <button class="action-btn" style="flex: 1; background: #28a745;" onclick="selectPaymentMethod('promptpay')">📲 สแกน QR PromptPay</button>
+                    <button class="action-btn" style="flex: 1; background: #6c757d;" onclick="selectPaymentMethod('cashier')">💵 จ่ายที่เคาน์เตอร์</button>
+                </div>
+
+                <!-- กล่อง QR Code จะแสดงเมื่อเลือก PromptPay -->
+                <div id="qr-code-box" class="qr-box" style="display: none;">
+                    <div class="promptpay-header">Prompt Pay</div>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=FennecFoxCafe" alt="QR Code" class="qr-img">
+                    <p class="qr-notice">สแกนจ่ายแล้วกดปุ่มยืนยันด้านล่าง</p>
+                </div>
+
+                <button class="action-btn" style="margin-top: 10px;" onclick="submitOrderToBackend()">ยืนยันการสั่งอาหาร ➔</button>
+            </div>
+
+            <!-- ขั้นตอนที่ 3: ติดตามสถานะออเดอร์ Real-time -->
+            <div id="step-status-view" style="display: none;">
+                <h3 class="modal-title">👨‍🍳 สถานะออเดอร์ของคุณ</h3>
+                
+                <div class="status-stepper">
+                    <div class="status-step" id="status-1">
+                        <div class="step-icon">🛒</div>
+                        <p>สั่งอาหาร</p>
+                    </div>
+                    <div class="status-line" id="line-1"></div>
+                    <div class="status-step" id="status-2">
+                        <div class="step-icon">🔥</div>
+                        <p>กำลังทำ</p>
+                    </div>
+                    <div class="status-line" id="line-2"></div>
+                    <div class="status-step" id="status-3">
+                        <div class="step-icon">✅</div>
+                        <p>เสร็จสิ้น</p>
+                    </div>
+                </div>
+
+                <div class="status-box">
+                    <p id="status-description">กำลังส่งรายการอาหารไปที่ห้องครัว...</p>
+                </div>
+
+                <button id="finish-order-btn" class="action-btn secondary-btn" style="display: none;" onclick="resetCartAndClose()">กลับสู่หน้าหลัก</button>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>

@@ -1,122 +1,467 @@
-/* เพิ่มไว้ท้ายสุดของไฟล์ style.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; /* ปิดแถบสีฟ้าเวลากดในมือถือ */
+}
 
-/* ปุ่มลอย ดูออเดอร์ของฉัน */
-.my-orders-btn {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    background: #ff9f43;
-    color: #fff;
+body {
+    background: #f3f4f6; /* พื้นหลังสีเทาอ่อนให้แอปดูโดดเด่น */
+    font-family: 'Prompt', sans-serif;
+}
+
+/* ล็อคขนาดให้พอดีมือถือ หรือถ้าเปิดในคอมจะอยู่ตรงกลางจอ */
+.app-container {
+    max-width: 480px;
+    margin: 0 auto;
+    background: #ffffff;
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 100px; /* เว้นที่ให้ตะกร้า */
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.header {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
+}
+
+.header h1 { font-size: 50px; }
+.header h2 { font-size: 22px; margin-top: 10px; font-weight: 600; }
+.header p { font-size: 13px; opacity: 0.9; margin-top: 5px; }
+
+/* แถบหมวดหมู่ที่เลื่อนซ้ายขวาได้ */
+.categories {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(5px);
+    z-index: 10;
+}
+
+.categories::-webkit-scrollbar { display: none; } /* ซ่อน Scrollbar */
+
+.cat-btn {
+    background: #f3f4f6;
     border: none;
-    padding: 8px 14px;
+    padding: 8px 18px;
     border-radius: 20px;
-    font-family: 'Prompt', sans-serif;
-    font-weight: 600;
-    font-size: 0.85rem;
+    font-family: 'Prompt';
+    font-weight: 500;
+    color: #6b7280;
     cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    z-index: 99;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    white-space: nowrap;
+    transition: 0.3s;
 }
 
-.orders-badge {
-    background: #e74c3c;
+.cat-btn.active {
+    background: #d97706;
     color: white;
-    border-radius: 50%;
-    padding: 2px 7px;
-    font-size: 0.75rem;
+    box-shadow: 0 4px 10px rgba(217, 119, 6, 0.3);
 }
 
-/* ปุ่มสั่งอาหารเพิ่มใน Modal */
-.order-more-btn {
+/* จัดเรียงเมนูแบบ 2 คอลัมน์ */
+.menu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    padding: 0 20px;
+}
+
+.food-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    transition: transform 0.2s;
+}
+
+.food-card:active { transform: scale(0.96); }
+
+.food-card img {
     width: 100%;
-    padding: 12px;
-    background: #3498db;
+    height: 130px;
+    object-fit: cover;
+}
+
+.food-info { padding: 12px; }
+
+.food-info h3 {
+    font-size: 14px;
+    color: #1f2937;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.food-info p { font-size: 12px; color: #9ca3af; }
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.price { color: #d97706; font-weight: 600; font-size: 15px; }
+
+.add-btn {
+    background: #d97706;
     color: white;
     border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-family: 'Prompt', sans-serif;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    margin-top: 15px;
+    box-shadow: 0 2px 5px rgba(217, 119, 6, 0.4);
 }
 
-/* การ์ดสถานะออเดอร์แต่ละรายการ */
-.order-status-card {
-    background: #fdfefe;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
-
-.order-card-header {
+/* แถบตะกร้าสินค้าลอยตัว */
+.cart-bar {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 40px);
+    max-width: 440px;
+    background: #111827;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 20px;
     display: flex;
     justify-content: space-between;
-    font-size: 0.95rem;
-    color: #2c3e50;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 6px;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+    z-index: 50;
+    cursor: pointer;
 }
 
-.order-time {
-    font-size: 0.8rem;
-    color: #7f8c8d;
+.cart-info, .cart-price { display: flex; align-items: center; gap: 10px; }
+.cart-info span, .cart-price span { font-weight: 500; font-size: 16px; }
+.checkout-arrow { background: #d97706; padding: 2px 8px; border-radius: 10px; font-size: 14px; }
+
+
+/* ==================== สไตล์สำหรับโมดอลใหม่ (Cart & Checkout UI) ==================== */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: flex-end; /* ให้เด้งขึ้นมาจากขอบล่างแบบแอปโมเดิร์น */
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
 }
 
-.order-card-items {
-    font-size: 0.85rem;
-    color: #555;
-    margin: 8px 0 12px 0;
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
 }
 
-/* Status Tracker Mini Bar */
-.status-tracker {
+.modal-content {
+    background: #ffffff;
+    width: 100%;
+    max-width: 480px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    padding: 30px 24px 40px 24px;
+    position: relative;
+    box-shadow: 0 -10px 25px rgba(0,0,0,0.15);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 32px;
+    height: 32px;
+    background: #f3f4f6;
+    border: none;
+    border-radius: 50%;
+    font-size: 14px;
+    color: #4b5563;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* รายการสินค้าในโมดอล */
+.cart-items-list {
+    max-height: 220px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding-right: 5px;
+}
+
+.modal-cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.modal-item-details h4 {
+    font-size: 15px;
+    color: #1f2937;
+    font-weight: 500;
+}
+
+.modal-item-details p {
+    font-size: 13px;
+    color: #d97706;
+    font-weight: 600;
+}
+
+.modal-item-qty {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.modal-item-qty button {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid #d1d5db;
+    background: white;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4b5563;
+}
+
+.modal-item-qty span {
+    font-size: 15px;
+    font-weight: 600;
+    min-width: 20px;
+    text-align: center;
+}
+
+.modal-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #4b5563;
+}
+
+.total-price-text {
+    font-size: 22px;
+    font-weight: 600;
+    color: #d97706;
+}
+
+/* ปุ่ม Action หลัก */
+.action-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 16px;
+    font-family: 'Prompt';
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    transition: 0.2s;
+}
+
+.action-btn:active {
+    transform: scale(0.98);
+}
+
+.secondary-btn {
+    background: #111827;
+    box-shadow: 0 4px 12px rgba(17, 24, 39, 0.2);
+}
+
+/* หน้าชำระเงิน */
+.payment-subtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #4b5563;
+    margin-bottom: 15px;
+}
+
+.highlight-text {
+    color: #d97706;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.qr-box {
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.promptpay-header {
+    background: #003366;
+    color: white;
+    font-weight: 600;
+    padding: 6px 15px;
+    border-radius: 8px;
+    display: inline-block;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.qr-img {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto;
+    display: block;
+}
+
+.qr-notice {
+    font-size: 12px;
+    color: #9ca3af;
+    margin-top: 10px;
+}
+
+/* หน้าสเต็ปการทำอาหาร (Order Status Tracker) */
+.status-stepper {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 10px 0;
+    margin: 30px 10px;
 }
 
 .status-step {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: #f1f2f6;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    color: #a4b0be;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    opacity: 0.4;
+    transition: 0.3s;
 }
 
 .status-step.active {
-    background: #ff9f43;
-    color: white;
+    opacity: 1;
+}
+
+.step-icon {
+    width: 50px;
+    height: 50px;
+    background: #f3f4f6;
+    border: 2px solid #e5e7eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin: 0 auto 8px auto;
+    transition: 0.3s;
+}
+
+.status-step.active .step-icon {
+    background: #fef3c7;
+    border-color: #d97706;
+}
+
+.status-step p {
+    font-size: 12px;
+    font-weight: 500;
+    color: #374151;
 }
 
 .status-line {
     flex: 1;
     height: 3px;
-    background: #f1f2f6;
-    margin: 0 4px;
+    background: #e5e7eb;
+    margin-bottom: 22px;
+    position: relative;
+    z-index: 1;
 }
 
 .status-line.active {
-    background: #ff9f43;
+    background: #d97706;
 }
 
-.status-msg {
+.status-box {
+    background: #fffbeb;
+    border: 1px dashed #f59e0b;
+    border-radius: 16px;
+    padding: 20px;
     text-align: center;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #e67e22;
-    background: #fff8f0;
-    padding: 6px;
-    border-radius: 6px;
-    margin-top: 8px;
+    margin-bottom: 30px;
 }
+
+#status-description {
+    font-size: 14px;
+    color: #b45309;
+    font-weight: 500;
+}
+
+/* ค้นหาและเปลี่ยน CSS 3 ชุดนี้ใน kitchen.html */
+.stock-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+    gap: 12px; 
+}
+
+.stock-item { 
+    background: #2d2d44; 
+    padding: 12px 15px; 
+    border-radius: 8px; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    border: 1px solid #3d3d5c;
+}
+
+.toggle-btn { 
+    padding: 6px 12px; 
+    border: none; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-family: 'Prompt'; 
+    font-weight: 600; 
+    font-size: 0.85rem;
+    min-width: 75px;
+}
+.in-stock { background: #28a745; color: white; }
+.out-stock { background: #dc3545; color: white; }
