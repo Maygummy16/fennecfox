@@ -230,7 +230,7 @@ let menuData = [
     { 
         id: 70, 
         name: "โกโก้", 
-        category: "drink", 
+        category: "เครื่องดื่ม", 
         options: [
             { label: "ร้อน", price: 45 },
             { label: "เย็น", price: 55 },
@@ -242,7 +242,7 @@ let menuData = [
      { 
         id: 71, 
         name: "ชาเขียวนมสด", 
-        category: "drink", 
+        category: "เครื่องดื่ม", 
         options: [
             { label: "เย็น", price: 55 },
             { label: "ปั่น", price: 60 }
@@ -253,7 +253,7 @@ let menuData = [
      { 
         id: 72, 
         name: "ชานม(ชาไทย)", 
-        category: "drink", 
+        category: "เครื่องดื่ม", 
         options: [
             { label: "เย็น", price: 55 },
             { label: "ปั่น", price: 60 }
@@ -261,20 +261,20 @@ let menuData = [
         desc: "", img: "", isAvailable: true 
     }, 
 
-    { id: 73, name: "ชาดําเย็น", category: "drink", price: 45, desc: "", img: "", isAvailable: true },
-    { id: 74, name: "ชามะนาว", category: "drink", price: 50, desc: "", img: "", isAvailable: true },
-    { id: 75, name: "เพียวมัทฉะ", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 76, name: "มัทฉะลาเต้", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 77, name: "มัทฉะยูซุ", category: "drink", price: 70, desc: "", img: "", isAvailable: true },
-    { id: 78, name: "บลูฮาวายโซดา", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 79, name: "ส้มยูซุโซดา", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 80, name: "บ๊วยโซดา", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 81, name: "สตรอว์เบอร์รีโซดา", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 82, name: "เลมอนโซดา", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 83, name: "สตรอว์เบอร์รีปั่น", category: "drink", price: 70, desc: "", img: "", isAvailable: true },   
-    { id: 84, name: "ส้มปั่น", category: "drink", price: 70, desc: "", img: "", isAvailable: true },
-    { id: 85, name: "มะม่วงปั่น", category: "drink", price: 70, desc: "", img: "", isAvailable: true },   
-    { id: 86, name: "มิกซ์เบอร์รีปั่น", category: "drink", price: 70, desc: "", img: "", isAvailable: true },
+    { id: 73, name: "ชาดําเย็น", category: "เครื่องดื่ม", price: 45, desc: "", img: "", isAvailable: true },
+    { id: 74, name: "ชามะนาว", category: "เครื่องดื่ม", price: 50, desc: "", img: "", isAvailable: true },
+    { id: 75, name: "เพียวมัทฉะ", category: "เครื่องดื่ม", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 76, name: "มัทฉะลาเต้", category: "เครื่องดื่ม", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 77, name: "มัทฉะยูซุ", category: "เครื่องดื่ม", price: 70, desc: "", img: "", isAvailable: true },
+    { id: 78, name: "บลูฮาวายโซดา", category: "เครื่องดื่ม", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 79, name: "ส้มยูซุโซดา", category: "เครื่องดื่ม", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 80, name: "บ๊วยโซดา", category: "เครื่องดื่ม", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 81, name: "สตรอว์เบอร์รีโซดา", category: "เครื่องดื่ม", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 82, name: "เลมอนโซดา", category: "เครื่องดื่ม", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 83, name: "สตรอว์เบอร์รีปั่น", category: "เครื่องดื่ม", price: 70, desc: "", img: "", isAvailable: true },   
+    { id: 84, name: "ส้มปั่น", category: "เครื่องดื่ม", price: 70, desc: "", img: "", isAvailable: true },
+    { id: 85, name: "มะม่วงปั่น", category: "เครื่องดื่ม", price: 70, desc: "", img: "", isAvailable: true },   
+    { id: 86, name: "มิกซ์เบอร์รีปั่น", category: "เครื่องดื่ม", price: 70, desc: "", img: "", isAvailable: true },
     { id: 87, name: "ข้าวผัดสับปะรด", category: "ข้าว", price: 259, desc: "", img: "", isAvailable: true },
     { id: 88, name: "ข้าวผัดรถไฟ", category: "ข้าว", price: 80, desc: "", img: "", isAvailable: true },
 
