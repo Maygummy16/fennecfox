@@ -5,6 +5,43 @@
     <title>หน้าจอห้องครัว - Fennec Fox Cafe</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+
+        .table-grid { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px; }
+.table-block {
+    width: 60px; height: 60px;
+    background: #fff; color: #dc3545;
+    font-size: 24px; font-weight: bold; font-family: 'Prompt';
+    border-radius: 12px; border: 2px solid #dc3545;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: 0.2s;
+}
+.table-block:hover { background: #dc3545; color: #fff; transform: scale(1.05); }
+
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center;
+    z-index: 1000; backdrop-filter: blur(3px);
+}
+.bill-modal-content {
+    background: #fff; color: #000; width: 90%; max-width: 400px;
+    border-radius: 16px; padding: 25px; position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+.close-modal-btn {
+    position: absolute; top: 15px; right: 15px;
+    background: #f3f4f6; border: none; width: 32px; height: 32px;
+    border-radius: 50%; font-size: 16px; color: #666;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.close-modal-btn:hover { background: #e5e7eb; color: #333; }
+.bill-items-container {
+    max-height: 250px; overflow-y: auto; padding-right: 5px;
+}
+.bill-item-row {
+    display: flex; justify-content: space-between;
+    margin-bottom: 10px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; font-size: 15px;
+}
+
         body { font-family: 'Prompt', sans-serif; background: #1e1e2f; color: #fff; padding: 20px; }
         h1, h2 { color: #ff9f43; margin-bottom: 10px; }
         .section-box { background: #2a2a3d; padding: 15px; border-radius: 10px; margin-bottom: 25px; }
@@ -53,15 +90,33 @@
 
     <!-- 🟢 วางโค้ดใหม่ตรงนี้ 🟢 -->
     <div class="section-box">
-        <h2>🧹 เช็คบิล / ล้างออเดอร์ประจำโต๊ะ</h2>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-            <!-- เพิ่มปุ่มตามจำนวนโต๊ะที่มีในร้านได้เลย -->
-            <button onclick="clearTable('โต๊ะ 1')" class="btn" style="background: #dc3545; width: auto; padding: 10px 20px;">เช็คบิล โต๊ะ 1</button>
-            <button onclick="clearTable('โต๊ะ 2')" class="btn" style="background: #dc3545; width: auto; padding: 10px 20px;">เช็คบิล โต๊ะ 2</button>
-            <button onclick="clearTable('โต๊ะ 3')" class="btn" style="background: #dc3545; width: auto; padding: 10px 20px;">เช็คบิล โต๊ะ 3</button>
-            <button onclick="clearTable('สั่งกลับบ้าน')" class="btn" style="background: #6c757d; width: auto; padding: 10px 20px;">เคลียร์คิว สั่งกลับบ้าน</button>
-        </div>
+    <h2>🧹 เช็คบิล / ล้างออเดอร์ประจำโต๊ะ</h2>
+    <div class="table-grid">
+        <button class="table-block" onclick="openBillModal('โต๊ะ 1')">1</button>
+        <button class="table-block" onclick="openBillModal('โต๊ะ 2')">2</button>
+        <button class="table-block" onclick="openBillModal('โต๊ะ 3')">3</button>
+        <button class="table-block" style="width: auto; padding: 0 15px; font-size: 16px;" onclick="openBillModal('สั่งกลับบ้าน')">กลับบ้าน</button>
     </div>
+</div>
+
+<!-- Modal สำหรับเช็คบิล -->
+<div id="bill-modal" class="modal-overlay" style="display: none;">
+    <div class="bill-modal-content">
+        <button class="close-modal-btn" onclick="closeBillModal()">✕</button>
+        <h3 id="bill-table-name" style="margin-bottom: 15px; color: #333; text-align: center;">โต๊ะ ?</h3>
+        
+        <div id="bill-items-list" class="bill-items-container"></div>
+        
+        <div style="border-top: 2px dashed #ccc; padding-top: 15px; margin-top: 10px; font-weight: bold; font-size: 1.2rem; display: flex; justify-content: space-between; color: #333;">
+            <span>ยอดรวมทั้งสิ้น:</span>
+            <span id="bill-total-price" style="color: #d97706;">0 ฿</span>
+        </div>
+        
+        <button id="btn-confirm-clear" class="btn" style="background: #28a745; margin-top: 20px; width: 100%; font-size: 1.1rem; padding: 12px; border-radius: 8px;">
+            💰 ลูกค้าโอนเงินแล้ว / ล้างออเดอร์
+        </button>
+    </div>
+</div>
     <!-- 🟢 สิ้นสุดโค้ดใหม่ 🟢 -->
 
     <!-- ซ่อนพื้นที่พิมพ์สลิป (อันเดิม) -->
@@ -209,15 +264,67 @@
         fetchStockItems();
         fetchKitchenOrders();
 
-        async function clearTable(tableName) {
-    if (!confirm(`ต้องการเช็คบิลและล้างออเดอร์ของ "${tableName}" ใช่ไหม?`)) return;
+        async function openBillModal(tableName) {
+    try {
+        // ดึงข้อมูลเฉพาะของโต๊ะนั้นเพื่อมารวมบิล
+        const res = await fetch(`/api/orders?table=${encodeURIComponent(tableName)}`);
+        const tableOrders = await res.json();
+        
+        // รวมรายการที่สั่งเหมือนกัน
+        const itemMap = {};
+        tableOrders.forEach(order => {
+            order.items.forEach(item => {
+                if (itemMap[item.id]) {
+                    itemMap[item.id].quantity += item.quantity;
+                } else {
+                    itemMap[item.id] = { ...item };
+                }
+            });
+        });
+
+        const aggregatedItems = Object.values(itemMap);
+        const totalPrice = aggregatedItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        // นำข้อมูลลงแสดงใน Modal
+        document.getElementById('bill-table-name').innerText = `เช็คบิล ${tableName}`;
+        
+        let itemsHtml = aggregatedItems.map(item => `
+            <div class="bill-item-row">
+                <span>${item.name} <span style="color: #666; font-size: 13px;">x${item.quantity}</span></span>
+                <span>${item.price * item.quantity} ฿</span>
+            </div>
+        `).join('');
+        
+        if(aggregatedItems.length === 0) {
+            itemsHtml = '<p style="text-align: center; color: #999; padding: 20px 0;">ไม่มีรายการอาหารค้างอยู่</p>';
+        }
+
+        document.getElementById('bill-items-list').innerHTML = itemsHtml;
+        document.getElementById('bill-total-price').innerText = `${totalPrice} ฿`;
+        
+        // ตั้งค่าปุ่มกดล้างออเดอร์
+        document.getElementById('btn-confirm-clear').onclick = () => clearTableOrders(tableName);
+        
+        // เปิด Modal
+        document.getElementById('bill-modal').style.display = 'flex';
+    } catch (err) {
+        alert("เกิดข้อผิดพลาดในการดึงข้อมูลบิล");
+    }
+}
+
+function closeBillModal() {
+    document.getElementById('bill-modal').style.display = 'none';
+}
+
+async function clearTableOrders(tableName) {
+    if (!confirm(`ยืนยันลูกค้าโอนเงินเรียบร้อย และต้องการล้างออเดอร์ของ "${tableName}" ใช่ไหม?`)) return;
     
     try {
         const res = await fetch(`/api/orders/clear/${encodeURIComponent(tableName)}`, { method: 'DELETE' });
         if (res.ok) {
-            alert(`ล้างข้อมูล ${tableName} เรียบร้อย พร้อมรับลูกค้าใหม่!`);
-            // ให้รีเฟรชหน้า หรือเรียกฟังก์ชันโหลดออเดอร์ครัวใหม่
-            location.reload(); 
+            alert(`✅ เคลียร์บิล ${tableName} เรียบร้อย พร้อมรับลูกค้าใหม่!`);
+            closeBillModal();
+            fetchKitchenOrders(); // รีเฟรชหน้าจอออเดอร์ครัว
         }
     } catch (err) {
         alert("เกิดข้อผิดพลาด ไม่สามารถล้างโต๊ะได้");
