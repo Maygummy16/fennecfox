@@ -230,7 +230,7 @@ let menuData = [
     { 
         id: 70, 
         name: "โกโก้", 
-        category: "non-coffee", 
+        category: "drink", 
         options: [
             { label: "ร้อน", price: 45 },
             { label: "เย็น", price: 55 },
@@ -242,7 +242,7 @@ let menuData = [
      { 
         id: 71, 
         name: "ชาเขียวนมสด", 
-        category: "non-coffee", 
+        category: "drink", 
         options: [
             { label: "เย็น", price: 55 },
             { label: "ปั่น", price: 60 }
@@ -253,7 +253,7 @@ let menuData = [
      { 
         id: 72, 
         name: "ชานม(ชาไทย)", 
-        category: "non-coffee", 
+        category: "drink", 
         options: [
             { label: "เย็น", price: 55 },
             { label: "ปั่น", price: 60 }
@@ -261,35 +261,153 @@ let menuData = [
         desc: "", img: "", isAvailable: true 
     }, 
 
-    { id: 73, name: "ชาดําเย็น", category: "non-coffee", price: 45, desc: "", img: "", isAvailable: true },
-    { id: 74, name: "ชามะนาว", category: "non-coffee", price: 50, desc: "", img: "", isAvailable: true },
-    { id: 75, name: "เพียวมัทฉะ", category: "non-coffee", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 76, name: "มัทฉะลาเต้", category: "non-coffee", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 77, name: "มัทฉะยูซุ", category: "non-coffee", price: 70, desc: "", img: "", isAvailable: true },
-    { id: 78, name: "บลูฮาวายโซดา", category: "Italian-soda", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 79, name: "ส้มยูซุโซดา", category: "Italian-soda", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 80, name: "บ๊วยโซดา", category: "Italian-soda", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 81, name: "สตรอว์เบอร์รีโซดา", category: "Italian-soda", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 82, name: "เลมอนโซดา", category: "Italian-soda", price: 60, desc: "", img: "", isAvailable: true },
-    { id: 83, name: "สตรอว์เบอร์รีปั่น", category: "Smoothie", price: 70, desc: "", img: "", isAvailable: true },   
-    { id: 84, name: "ส้มปั่น", category: "Smoothie", price: 70, desc: "", img: "", isAvailable: true },
-    { id: 85, name: "มะม่วงปั่น", category: "Smoothie", price: 70, desc: "", img: "", isAvailable: true },   
-    { id: 86, name: "มิกซ์เบอร์รีปั่น", category: "Smoothie", price: 70, desc: "", img: "", isAvailable: true },
+    { id: 73, name: "ชาดําเย็น", category: "drink", price: 45, desc: "", img: "", isAvailable: true },
+    { id: 74, name: "ชามะนาว", category: "drink", price: 50, desc: "", img: "", isAvailable: true },
+    { id: 75, name: "เพียวมัทฉะ", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 76, name: "มัทฉะลาเต้", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 77, name: "มัทฉะยูซุ", category: "drink", price: 70, desc: "", img: "", isAvailable: true },
+    { id: 78, name: "บลูฮาวายโซดา", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 79, name: "ส้มยูซุโซดา", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 80, name: "บ๊วยโซดา", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 81, name: "สตรอว์เบอร์รีโซดา", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 82, name: "เลมอนโซดา", category: "drink", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 83, name: "สตรอว์เบอร์รีปั่น", category: "drink", price: 70, desc: "", img: "", isAvailable: true },   
+    { id: 84, name: "ส้มปั่น", category: "drink", price: 70, desc: "", img: "", isAvailable: true },
+    { id: 85, name: "มะม่วงปั่น", category: "drink", price: 70, desc: "", img: "", isAvailable: true },   
+    { id: 86, name: "มิกซ์เบอร์รีปั่น", category: "drink", price: 70, desc: "", img: "", isAvailable: true },
     { id: 87, name: "ข้าวผัดสับปะรด", category: "ข้าว", price: 259, desc: "", img: "", isAvailable: true },
     { id: 88, name: "ข้าวผัดรถไฟ", category: "ข้าว", price: 80, desc: "", img: "", isAvailable: true },
 
     { 
         id: 89, 
-        name: "ข้าวผัดหม", 
-        category: "non-coffee", 
+        name: "ข้าวผัดหมู", 
+        category: "ข้าว", 
         options: [
-            { label: "ร้อน", price: 45 },
-            { label: "เย็น", price: 55 },
-            { label: "ปั่น", price: 60 }
+            { label: "เล็ก", price: 80 },
+            { label: "กลาง", price: 160 },
+            { label: "ใหญ่", price: 320 }
         ],
         desc: "", img: "", isAvailable: true 
     },
 
+    { 
+        id: 90, 
+        name: "ข้าวผัดไก่", 
+        category: "ข้าว", 
+        options: [
+            { label: "เล็ก", price: 80 },
+            { label: "กลาง", price: 160 },
+            { label: "ใหญ่", price: 320 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
+    { 
+        id: 91, 
+        name: "ข้าวผัดทะเล", 
+        category: "ข้าว", 
+        options: [
+            { label: "เล็ก", price: 90 },
+            { label: "กลาง", price: 180 },
+            { label: "ใหญ่", price: 360 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
+    { 
+        id: 92, 
+        name: "สุกี้เเห้ง", 
+        category: "อาหารจานเดียว", 
+        options: [
+            { label: "หมู", price: 80 },
+            { label: "ไก่", price: 70 },
+            { label: "ทะเล", price: 90 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
+    { 
+        id: 93, 
+        name: "ข้าวไข่เจียว", 
+        category: "อาหารจานเดียว", 
+        options: [
+            { label: "หมู", price: 60 },
+            { label: "ไก่", price: 70 },
+            { label: "ทะเล", price: 90 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
+    { 
+        id: 94, 
+        name: "ผัดซีอิ้ว", 
+        category: "อาหารจานเดียว", 
+        options: [
+            { label: "หมู", price: 80 },
+            { label: "ไก่", price: 80 },
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
+    { 
+        id: 95, 
+        name: "ราดหน้า", 
+        category: "อาหารจานเดียว", 
+        options: [
+            { label: "หมู", price: 80 },
+            { label: "ไก่", price: 80 },
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
+    { 
+        id: 96, 
+        name: "ข้าวหน้ากะเพรา", 
+        category: "อาหารจานเดียว", 
+        options: [
+            { label: "หมู,ไก่", price: 80 },
+            { label: "ทะเล", price: 100 }         
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
+    { 
+        id: 97, 
+        name: "ข้าวหน้าผัดพริกเเกง", 
+        category: "อาหารจานเดียว", 
+        options: [
+            { label: "หมู,ไก่", price: 80 },
+            { label: "ทะเล", price: 100 }         
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
+    { 
+        id: 98, 
+        name: "ข้าว...กระเทียม", 
+        category: "อาหารจานเดียว", 
+        options: [
+            { label: "หมู,ไก่", price: 80 },
+            { label: "ทะเล", price: 100 }         
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
+    { id: 99, name: "เอ็นไก่ทอด", category: "ของทานเล่น", price: 99, desc: "", img: "", isAvailable: true },
+    { id: 100, name: "นักเก็ตไก่ทอด", category: "ของทานเล่น", price: 99, desc: "", img: "", isAvailable: true },
+    { id: 101, name: "เฟรนช์ฟรายทอด", category: "ของทานเล่น", price: 80, desc: "", img: "", isAvailable: true },
+    { id: 102, name: "ปอเปี้ยชีส", category: "ของทานเล่น", price: 90, desc: "", img: "", isAvailable: true },
+    { id: 103, name: "ชีสเค้ก", category: "ของหวาน", price: 90, desc: "", img: "", isAvailable: true },
+    { id: 104, name: "เค้กสตอว์เบอร์รี", category: "ของหวาน", price: 80, desc: "", img: "", isAvailable: true },
+    { id: 105, name: "เค้กบลูเบอร์รี", category: "ของหวาน", price: 80, desc: "", img: "", isAvailable: true },
+    { id: 106, name: "เค้กช็อกโกเเลต", category: "ของหวาน", price: 80, desc: "", img: "", isAvailable: true },
+    { id: 107, name: "ท็อปฟี่เค้ก", category: "ของหวาน", price: 50, desc: "", img: "", isAvailable: true },
+    { id: 108, name: "บราวนี่", category: "ของหวาน", price: 45, desc: "", img: "", isAvailable: true },
+    { id: 109, name: "มัฟฟีน", category: "ของหวาน", price: 45, desc: "", img: "", isAvailable: true },
+    { id: 110, name: "ครัวซองต์", category: "ของหวาน", price: 45, desc: "", img: "", isAvailable: true },
+    { id: 111, name: "ครัวซองต์ช็อกโกเเลต", category: "ของหวาน", price: 75, desc: "", img: "", isAvailable: true },
+    { id: 112, name: "เเซนถ์วิชไส้ครีมผลไม้", category: "ของหวาน", price: 70, desc: "", img: "", isAvailable: true },
+    { id: 109, name: "เเซนถ์วิช เเฮมชีส", category: "ของหวาน", price: 75, desc: "", img: "", isAvailable: true },
 ];
 
 let orders = [];
