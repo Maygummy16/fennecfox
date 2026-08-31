@@ -6,6 +6,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
 
+    .cat-tab-btn {
+    padding: 8px 15px; background: #3b3b54; color: #fff;
+    border: 1px solid #555; border-radius: 20px;
+    cursor: pointer; font-family: 'Prompt'; transition: 0.2s;
+}
+.cat-tab-btn.active, .cat-tab-btn:hover {
+    background: #ff9f43; border-color: #ff9f43; color: #000; font-weight: bold;
+}
+.category-container {
+    display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;
+}
+
         .table-grid { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 15px; }
 .table-block {
     width: 60px; height: 60px;
@@ -77,8 +89,10 @@
     <h1>👨‍🍳 จอแสดงรายการอาหารในครัว</h1>
 
     <!-- แผงปิด/เปิดเมนูอาหาร (สินค้าหมด) -->
+    <!-- แผงปิด/เปิดเมนูอาหาร (สินค้าหมด) -->
     <div class="section-box">
         <h2>📦 จัดการวัตถุดิบ / สินค้าหมด</h2>
+        <div id="stock-category-buttons" class="category-container"></div>
         <div class="stock-grid" id="stock-container"></div>
     </div>
     
@@ -119,9 +133,6 @@
 </div>
     <!-- 🟢 สิ้นสุดโค้ดใหม่ 🟢 -->
 
-    <!-- ซ่อนพื้นที่พิมพ์สลิป (อันเดิม) -->
-    <div id="print-area"></div>
-
     <!-- ซ่อนพื้นที่พิมพ์สลิป -->
     <div id="print-area"></div>
 
@@ -147,29 +158,65 @@
         }
 
         // ดึงเมนูมาจัดการสถานะของหมด
-        async function fetchStockItems() {
-            const res = await fetch('/api/menus');
-            const menus = await res.json();
-            const container = document.getElementById('stock-container');
-            container.innerHTML = '';
+let allStockMenus = [];
+let currentStockCategory = ''; // จำหมวดหมู่ที่กำลังเปิดอยู่
 
-            menus.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'stock-item';
-                div.innerHTML = `
-                    <span>${item.name}</span>
-                    <button class="toggle-btn ${item.isAvailable ? 'in-stock' : 'out-stock'}" onclick="toggleStock(${item.id})">
-                        ${item.isAvailable ? 'มีสินค้า' : 'หมด'}
-                    </button>
-                `;
-                container.appendChild(div);
-            });
-        }
+async function fetchStockItems() {
+    const res = await fetch('/api/menus');
+    allStockMenus = await res.json();
+    
+    renderCategoryButtons();
+    
+    // หากยังไม่มีการเลือกหมวดหมู่ ให้แสดงหมวดหมู่แรกเป็นค่าเริ่มต้น
+    if (!currentStockCategory && allStockMenus.length > 0) {
+        currentStockCategory = allStockMenus[0].category;
+    }
+    renderStockByCategory(currentStockCategory);
+}
 
-        async function toggleStock(id) {
-            await fetch(`/api/menus/${id}/toggle`, { method: 'PUT' });
-            fetchStockItems();
-        }
+function renderCategoryButtons() {
+    const container = document.getElementById('stock-category-buttons');
+    container.innerHTML = '';
+    
+    // ดึงชื่อหมวดหมู่ทั้งหมดแบบไม่ซ้ำกัน
+    const categories = [...new Set(allStockMenus.map(item => item.category))];
+    
+    categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.className = `cat-tab-btn ${cat === currentStockCategory ? 'active' : ''}`;
+        btn.innerText = cat;
+        btn.onclick = () => {
+            currentStockCategory = cat; // จำหมวดหมู่ที่กด
+            renderCategoryButtons(); // วาดปุ่มใหม่เพื่ออัปเดตสถานะ active
+            renderStockByCategory(cat); // วาดเมนูในหมวดหมู่นั้น
+        };
+        container.appendChild(btn);
+    });
+}
+
+function renderStockByCategory(category) {
+    const container = document.getElementById('stock-container');
+    container.innerHTML = '';
+
+    const filteredMenus = allStockMenus.filter(item => item.category === category);
+
+    filteredMenus.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'stock-item';
+        div.innerHTML = `
+            <span>${item.name}</span>
+            <button class="toggle-btn ${item.isAvailable ? 'in-stock' : 'out-stock'}" onclick="toggleStock(${item.id})">
+                ${item.isAvailable ? 'มีสินค้า' : 'หมด'}
+            </button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+async function toggleStock(id) {
+    await fetch(`/api/menus/${id}/toggle`, { method: 'PUT' });
+    fetchStockItems(); // โหลดข้อมูลใหม่ หน้าจอจะยังอยู่ที่หมวดหมู่เดิม
+}
 
         // ดึงรายการออเดอร์
         async function fetchKitchenOrders() {
