@@ -77,13 +77,19 @@ function renderMenu(items) {
             ? `<button class="add-btn" onclick="addToCart(${item.id})">+</button>`
             : `<span style="color: red; font-size: 0.8rem; font-weight: bold;">หมด</span>`;
 
+        // 🟢 เพิ่มการเช็คราคา: ถ้าไม่มี price แต่มี options ให้เอาตัวเลือกแรกมาแสดง
+        let displayPrice = item.price;
+        if (!displayPrice && item.options && item.options.length > 0) {
+            displayPrice = `เริ่ม ${item.options[0].price}`;
+        }
+
         card.innerHTML = `
             <img src="${item.img}" alt="${item.name}" style="${!item.isAvailable ? 'filter: grayscale(1); opacity: 0.6;' : ''}">
             <div class="food-info">
                 <h3>${item.name}</h3>
                 <p>${item.desc}</p>
                 <div class="price-row">
-                    <span class="price">${item.price} ฿</span>
+                    <span class="price">${displayPrice} ฿</span>
                     ${actionButton}
                 </div>
             </div>
@@ -96,9 +102,27 @@ function addToCart(id) {
     const product = menuData.find(item => item.id === id);
     if (!product || !product.isAvailable) return;
 
-    const cartItem = cart.find(item => item.id === id);
-    if (cartItem) cartItem.quantity++;
-    else cart.push({ ...product, quantity: 1 });
+    // 🟢 กำหนดราคา และชื่อรายการให้ชัดเจน
+    let itemPrice = product.price;
+    let itemName = product.name;
+
+    // ถ้าเมนูนั้นไม่มี price แต่มี options ให้ใช้ราคาของตัวเลือกแรก
+    if (!itemPrice && product.options && product.options.length > 0) {
+        itemPrice = product.options[0].price;
+        itemName = `${product.name} (${product.options[0].label})`;
+    }
+
+    const cartItem = cart.find(item => item.id === id && item.name === itemName);
+    if (cartItem) {
+        cartItem.quantity++;
+    } else {
+        cart.push({
+            id: product.id,
+            name: itemName,
+            price: itemPrice, // 🟢 ต้องเป็นตัวเลขเสมอ
+            quantity: 1
+        });
+    }
     
     updateCart();
 }
