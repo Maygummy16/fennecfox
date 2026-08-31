@@ -98,33 +98,79 @@ function renderMenu(items) {
     });
 }
 
+// script.js
+
+// 1. ฟังก์ชันกดเพิ่มสินค้า (ถ้ามี options จะเปิด Popup ให้เลือกก่อน)
 function addToCart(id) {
     const product = menuData.find(item => item.id === id);
     if (!product || !product.isAvailable) return;
 
-    // 🟢 กำหนดราคา และชื่อรายการให้ชัดเจน
-    let itemPrice = product.price;
-    let itemName = product.name;
-
-    // ถ้าเมนูนั้นไม่มี price แต่มี options ให้ใช้ราคาของตัวเลือกแรก
-    if (!itemPrice && product.options && product.options.length > 0) {
-        itemPrice = product.options[0].price;
-        itemName = `${product.name} (${product.options[0].label})`;
+    // ถ้าเมนูนี้มีตัวเลือกหลายราคา ให้เปิด Popup เลือก
+    if (product.options && product.options.length > 0) {
+        openOptionModal(product);
+    } else {
+        // ถ้ามีราคาเดียว เพิ่มลงตะกร้าได้เลย
+        addItemToCart(product.id, product.name, product.price);
     }
+}
 
-    const cartItem = cart.find(item => item.id === id && item.name === itemName);
+// 2. ฟังก์ชันเพิ่มลงตะกร้าจริง
+function addItemToCart(id, name, price) {
+    const cartItem = cart.find(item => item.id === id && item.name === name);
     if (cartItem) {
         cartItem.quantity++;
     } else {
-        cart.push({
-            id: product.id,
-            name: itemName,
-            price: itemPrice, // 🟢 ต้องเป็นตัวเลขเสมอ
-            quantity: 1
-        });
+        cart.push({ id, name, price, quantity: 1 });
     }
-    
     updateCart();
+}
+
+// 3. ฟังก์ชันสร้าง Popup เลือกตัวเลือก (จะเด้งขึ้นหน้าจอให้อัตโนมัติ)
+function openOptionModal(product) {
+    closeOptionModal(); // ลบ Popup เก่าออกก่อนถ้ามี
+
+    const modal = document.createElement('div');
+    modal.id = 'option-select-modal';
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5); display: flex; align-items: center;
+        justify-content: center; z-index: 9999; padding: 20px; box-sizing: border-box;
+    `;
+
+    const optionsButtons = product.options.map(opt => `
+        <button style="
+            display: block; width: 100%; padding: 12px; margin: 8px 0;
+            background: #fff8f0; border: 1.5px solid #ff9f43; border-radius: 8px;
+            font-size: 1rem; font-weight: bold; color: #333; cursor: pointer; text-align: left;
+        " onclick="selectOptionAndAdd(${product.id}, '${opt.label}', ${opt.price})">
+            📌 ${opt.label} — <span style="color: #e67e22;">${opt.price} ฿</span>
+        </button>
+    `).join('');
+
+    modal.innerHTML = `
+        <div style="background: white; padding: 20px; border-radius: 12px; width: 100%; max-width: 320px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            <h3 style="margin-top:0; color: #333;">เลือกรูปแบบ (${product.name})</h3>
+            ${optionsButtons}
+            <button style="margin-top: 10px; background: #eee; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;" 
+                    onclick="closeOptionModal()">ยกเลิก</button>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+}
+
+// 4. ฟังก์ชันเมื่อผู้ใช้กดเลือกตัวเลือกใน Popup
+function selectOptionAndAdd(id, label, price) {
+    const product = menuData.find(item => item.id === id);
+    const fullName = `${product.name} (${label})`;
+    addItemToCart(id, fullName, price);
+    closeOptionModal();
+}
+
+// 5. ฟังก์ชันปิด Popup
+function closeOptionModal() {
+    const modal = document.getElementById('option-select-modal');
+    if (modal) modal.remove();
 }
 
 function updateCart() {
