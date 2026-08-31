@@ -1,4 +1,6 @@
 
+let currentCategory = 'all'; // 🟢 เพิ่มตัวแปรนี้ไว้จำหมวดหมู่ปัจจุบัน
+
 const urlParams = new URLSearchParams(window.location.search);
 const tableParam = urlParams.get('table');
 const typeParam = urlParams.get('type');
@@ -61,7 +63,9 @@ async function fetchMenus() {
     try {
         const response = await fetch('/api/menus');
         menuData = await response.json();
-        renderMenu(menuData);
+        
+        // 🟢 เปลี่ยนจาก renderMenu(menuData) เป็นการกรองตามหมวดหมู่ปัจจุบัน
+        applyMenuFilter(); 
     } catch (error) {}
 }
 
@@ -181,13 +185,27 @@ function updateCart() {
     document.getElementById('cart-total').innerText = `${totalPrice} ฿`;
 }
 
+// 🟢 ปรับปรุงฟังก์ชันกรองเมนูเมื่อถูกกด
 function filterMenu(category) {
+    currentCategory = category; // บันทึกหมวดหมู่ที่กดเลือก
+    
+    // เปลี่ยนสถานะปุ่ม active
     const buttons = document.querySelectorAll('.cat-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
-    event.target.classList.add('active');
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
     
-    if (category === 'all') renderMenu(menuData);
-    else renderMenu(menuData.filter(item => item.category === category));
+    applyMenuFilter();
+}
+
+// 🟢 เพิ่มฟังก์ชันสำหรับวาดเมนูตามหมวดหมู่ที่ถูกจำไว้
+function applyMenuFilter() {
+    if (currentCategory === 'all') {
+        renderMenu(menuData);
+    } else {
+        renderMenu(menuData.filter(item => item.category === currentCategory));
+    }
 }
 
 function openCartModal() {
