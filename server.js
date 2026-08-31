@@ -17,14 +17,55 @@ let menuData = [
             { label: "ปลาช่อน", price: 380 },
             { label: "ปลากะพง", price: 400 }
         ],
-        desc: "สูตรพิเศษ", img: "", isAvailable: true 
+        desc: "", img: "", isAvailable: true 
     },
 
-    { id: 2, name: "ปลาทับทิม/ปลากระพง ทอดนํ้าปลา", category: "ปลา", price: (350,380), desc: "", img: "", isAvailable: true },
+    { 
+        id: 2, 
+        name: "ปลาทอดนํ้าปลา", 
+        category: "ปลา", 
+        options: [
+            { label: "ปลาทับทิม", price: 350 },
+            { label: "ปลากะพง", price: 380 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
     { id: 3, name: "ปลาดุกฟู", category: "ปลา", price: 129, desc: "น้ำจิ้มรสเด็ด", img: "", isAvailable: true },
-    { id: 4, name: "ต้มยําทะเล ถ้วย/หม้อไฟ", category: "ต้ม", price: (159,229), desc: "", img: "", isAvailable: true },
-    { id: 5, name: "เเกงเลียงกุ้งสด ถ้วย/หม้อไฟ", category: "ต้ม", price: (159,199), desc: "", img: "", isAvailable: true },
-    { id: 6, name: "เเกงส้มชะอมกุ้ง ถ้วย/หม้อไฟ", category: "ต้ม", price: (139,199), desc: "", img: "", isAvailable: true },
+
+    { 
+        id: 4, 
+        name: "ต้มยําทะเล", 
+        category: "ปลา", 
+        options: [
+            { label: "ถ้วย", price: 159 },
+            { label: "หม้อไฟ", price: 229 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
+    { 
+        id: 5, 
+        name: "เเกงเลียงกุ้งสด", 
+        category: "ปลา", 
+        options: [
+            { label: "ถ้วย", price: 159 },
+            { label: "หม้อไฟ", price: 199 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
+    { 
+        id: 6, 
+        name: "เเกงส้มชะอมกุ้ง", 
+        category: "ปลา", 
+        options: [
+            { label: "ถ้วย", price: 139 },
+            { label: "หม้อไฟ", price: 199 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
     { id: 7, name: "เเป๊ะซะปลาซ่อน", category: "ต้ม", price: 349, desc: "", img: "", isAvailable: true },
     { id: 8, name: "ต้มเเซ่บกระดูกอ่อน", category: "ต้ม", price: 139, desc: "", img: "", isAvailable: true },
     { id: 9, name: "ฉู่ฉี่ปลาทู", category: "ต้ม", price: 139, desc: "", img: "", isAvailable: true },
@@ -33,7 +74,18 @@ let menuData = [
     { id: 12, name: "ไก่คั่วพริกเกลือ", category: "ผัด", price: 119, desc: "", img: "", isAvailable: true },
     { id: 13, name: "ปีกไก่คั่วพริกเกลือ", category: "ผัด", price: 119, desc: "", img: "", isAvailable: true },
     { id: 14, name: "สามชั้นคั่วพริกเกลือ", category: "ผัด", price: 119, desc: "", img: "", isAvailable: true },
-    { id: 15, name: "ผัดพริกไทยดํา หมู,ไก่/ทะเล", category: "ผัด", price: (119,129), desc: "", img: "", isAvailable: true },
+
+    { 
+        id: 15, 
+        name: "ผัดพริกไทยดํา", 
+        category: "ปลา", 
+        options: [
+            { label: "หมูมไก่", price: 119 },
+            { label: "ทะเล", price: 129 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
     { id: 16, name: "กุ้ง,หมึกผัดซอสมะขาม", category: "ผัด", price: 159, desc: "", img: "", isAvailable: true },
     { id: 17, name: "ผัดบล็อคโคลี่กุ้ง", category: "ผัด", price: 119, desc: "", img: "", isAvailable: true },
     { id: 18, name: "ปลาช่อนผัดขึ้นฉ่าย", category: "ผัด", price: 159, desc: "", img: "", isAvailable: true },
@@ -53,7 +105,18 @@ let menuData = [
     { id: 32, name: "สเต็กพอร์คชอป", category: "สเต๊ก", price: 179, desc: "", img: "", isAvailable: true },
     { id: 33, name: "สเต็กเนื้อ", category: "สเต๊ก", price: 179, desc: "", img: "", isAvailable: true },
     { id: 34, name: "สปาเก็ตตี้คาโบนาร่า", category: "สปาเก็ตตี้", price: 139, desc: "", img: "", isAvailable: true },
-    { id: 35, name: "สปาเก็ตตี้ขี้เมา หมู,ไก่/ทะเล", category: "สปาเก็ตตี้", price: (139, 159), desc: "", img: "", isAvailable: true },
+
+    { 
+        id: 35, 
+        name: "สปาเก็ตตี้ขี้เมา", 
+        category: "ปลา", 
+        options: [
+            { label: "หมู,ไก่", price: 139 },
+            { label: "ทะเล", price: 159 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
     { id: 36, name: "สปาเก็ตตี้ซอสมะเขือเทศ", category: "สปาเก็ตตี้", price: 139, desc: "", img: "", isAvailable: true },
     { id: 37, name: "สปาเก็ตตี้เบคอนพริกเเห้ง", category: "สปาเก็ตตี้", price: 149, desc: "", img: "", isAvailable: true },
     { id: 38, name: "ยําวุ้นเส้นทะเล", category: "ยํา", price: 129, desc: "", img: "", isAvailable: true },
@@ -80,6 +143,153 @@ let menuData = [
     { id: 59, name: "ปีกไก่ทอด", category: "ทอด", price: 129, desc: "", img: "", isAvailable: true },
     { id: 60, name: "ปีกไก่ทอดนํ้าปลา", category: "ทอด", price: 129, desc: "", img: "", isAvailable: true },
     { id: 61, name: "ปีกไก่ทอดนํ้าปลา", category: "ทอด", price: 129, desc: "", img: "", isAvailable: true },
+
+    { 
+        id: 62, 
+        name: "เอสเปรสโซ่", 
+        category: "coffee", 
+        options: [
+            { label: "ร้อน", price: 40 },
+            { label: "เย็น", price: 65 },
+            { label: "ปั่น", price: 70 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
+    { 
+        id: 63, 
+        name: "อเมริกาโน่", 
+        category: "coffee", 
+        options: [
+            { label: "ร้อน", price: 60 },
+            { label: "เย็น", price: 65 },
+        ],
+        desc: "", img: "", isAvailable: true 
+    }, 
+
+    { 
+        id: 64, 
+        name: "เเบล็คคอฟฟี่", 
+        category: "coffee", 
+        options: [
+            { label: "ร้อน", price: 55 },
+            { label: "เย็น", price: 65 },
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
+    { 
+        id: 65, 
+        name: "คาปูชิโน่", 
+        category: "coffee", 
+        options: [
+            { label: "ร้อน", price: 60 },
+            { label: "เย็น", price: 65 },
+            { label: "ปั่น", price: 70 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    }, 
+
+    { 
+        id: 66, 
+        name: "ลาเต้", 
+        category: "coffee", 
+        options: [
+            { label: "ร้อน", price: 60 },
+            { label: "เย็น", price: 65 },
+            { label: "ปั่น", price: 70 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    }, 
+
+    { 
+        id: 67, 
+        name: "มอคค่า", 
+        category: "coffee", 
+        options: [
+            { label: "ร้อน", price: 65 },
+            { label: "เย็น", price: 70 },
+            { label: "ปั่น", price: 75 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    }, 
+
+    { 
+        id: 68, 
+        name: "คาลาเมลมัคคิอาโต", 
+        category: "coffee", 
+        options: [
+            { label: "เย็น", price: 70 },
+            { label: "ปั่น", price: 80 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    }, 
+
+    { id: 69, name: "เเอโร่วกาโน่", category: "coffee", price: 70, desc: "", img: "", isAvailable: true },
+    
+    { 
+        id: 70, 
+        name: "โกโก้", 
+        category: "non-coffee", 
+        options: [
+            { label: "ร้อน", price: 45 },
+            { label: "เย็น", price: 55 },
+            { label: "ปั่น", price: 60 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+    
+     { 
+        id: 71, 
+        name: "ชาเขียวนมสด", 
+        category: "non-coffee", 
+        options: [
+            { label: "เย็น", price: 55 },
+            { label: "ปั่น", price: 60 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },   
+
+     { 
+        id: 72, 
+        name: "ชานม(ชาไทย)", 
+        category: "non-coffee", 
+        options: [
+            { label: "เย็น", price: 55 },
+            { label: "ปั่น", price: 60 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    }, 
+
+    { id: 73, name: "ชาดําเย็น", category: "non-coffee", price: 45, desc: "", img: "", isAvailable: true },
+    { id: 74, name: "ชามะนาว", category: "non-coffee", price: 50, desc: "", img: "", isAvailable: true },
+    { id: 75, name: "เพียวมัทฉะ", category: "non-coffee", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 76, name: "มัทฉะลาเต้", category: "non-coffee", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 77, name: "มัทฉะยูซุ", category: "non-coffee", price: 70, desc: "", img: "", isAvailable: true },
+    { id: 78, name: "บลูฮาวายโซดา", category: "Italian-soda", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 79, name: "ส้มยูซุโซดา", category: "Italian-soda", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 80, name: "บ๊วยโซดา", category: "Italian-soda", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 81, name: "สตรอว์เบอร์รีโซดา", category: "Italian-soda", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 82, name: "เลมอนโซดา", category: "Italian-soda", price: 60, desc: "", img: "", isAvailable: true },
+    { id: 83, name: "สตรอว์เบอร์รีปั่น", category: "Smoothie", price: 70, desc: "", img: "", isAvailable: true },   
+    { id: 84, name: "ส้มปั่น", category: "Smoothie", price: 70, desc: "", img: "", isAvailable: true },
+    { id: 85, name: "มะม่วงปั่น", category: "Smoothie", price: 70, desc: "", img: "", isAvailable: true },   
+    { id: 86, name: "มิกซ์เบอร์รีปั่น", category: "Smoothie", price: 70, desc: "", img: "", isAvailable: true },
+    { id: 87, name: "ข้าวผัดสับปะรด", category: "ข้าว", price: 259, desc: "", img: "", isAvailable: true },
+    { id: 88, name: "ข้าวผัดรถไฟ", category: "ข้าว", price: 80, desc: "", img: "", isAvailable: true },
+
+    { 
+        id: 89, 
+        name: "ข้าวผัดหม", 
+        category: "non-coffee", 
+        options: [
+            { label: "ร้อน", price: 45 },
+            { label: "เย็น", price: 55 },
+            { label: "ปั่น", price: 60 }
+        ],
+        desc: "", img: "", isAvailable: true 
+    },
+
 ];
 
 let orders = [];
